@@ -6,9 +6,11 @@ import java.util.stream.Collectors;
 class GameManager extends LinkedList<Round> {
 
 	Round nextGame() {
-		Round round =  new Round();
-		add(round);
+		return addAndReturn(new Round());
+	}
 
+	private Round addAndReturn(Round round) {
+		add(round);
 		return round;
 	}
 
@@ -19,24 +21,29 @@ class GameManager extends LinkedList<Round> {
 
 		for (int i = 0, rollIndex = 0; i < 10; i++) {
 
-			if (isStrike(rollIndex,rolls)){
+			Optional<Roll> roll = rolls.size() <= rollIndex ?Optional.empty() : Optional.ofNullable(rolls.get(rollIndex));
 
-				score = getRollValue(rollIndex, rolls) + getRollValue(rollIndex+1, rolls)+ getRollValue(rollIndex+2, rolls);
-				rollIndex+=1;
-			}
-
-
-			else if(isSpare(rollIndex, rolls)){
-				score += 10 + getRollValue(rollIndex, rolls);
-				rollIndex +=2;
+			if (isStrike(roll)) {
+				score += getValue(roll) + getRollValue(rollIndex + 1, rolls) + getRollValue(rollIndex + 2, rolls);
+				rollIndex += 1;
+			} else if (isSpare(rollIndex, rolls)) {
+				score += 10 + getValue(roll);
+				rollIndex += 2;
 			} else {
-				score += getRollValue(rollIndex, rolls) + getRollValue(rollIndex + 1, rolls);
-				rollIndex +=2;
+				score += getValue(roll) + getRollValue(rollIndex + 1, rolls);
+				rollIndex += 2;
 			}
-
 		}
 
 		return score;
+	}
+
+	private Boolean isStrike(Optional<Roll> roll) {
+		return roll.map(Roll::isStrike).orElse(false);
+	}
+
+	private Integer getValue(Optional<Roll> roll) {
+		return roll.map(Roll::getPins).orElse(0);
 	}
 
 	private boolean isSpare(int i, List<Roll> rolls) {
@@ -46,13 +53,6 @@ class GameManager extends LinkedList<Round> {
 		return roll1 + roll2 == 10;
 	}
 
-	private boolean isStrike(int i, List<Roll> rolls) {
-		Integer roll1 = getRollValue(i, rolls);
-
-		return roll1 == 10;
-	}
-
-
 	private int getRollValue(int rollIndex, List<Roll> rolls) {
 
 		if(rolls.size() <= rollIndex){
@@ -60,17 +60,5 @@ class GameManager extends LinkedList<Round> {
 		}
 
 		return Optional.ofNullable(rolls.get(rollIndex)).map(Roll::getPins).orElse(0);
-	}
-
-	private int getRollValueAndNext(int rollIndex, List<Roll> rolls) {
-
-		if(rolls.size() <= rollIndex){
-			return 0;
-		}
-
-		int value = Optional.ofNullable(rolls.get(rollIndex)).map(Roll::getPins).orElse(0);
-
-		rollIndex++;
-		return value;
 	}
 }

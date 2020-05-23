@@ -1,74 +1,102 @@
 package org.bmc.tdd;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 class BowlingGameTest {
 
-    BowlingGame theGame = new BowlingGame();
+    BowlingGame theGame;
+
+    @BeforeEach
+    public void init() {
+        theGame = BowlingGame.newGame();
+    }
 
     @Test
     public void shouldScoreOneWhenRolledOne() {
-        theGame.nextGame().roll(1);
+        theGame.nextRound().roll(1);
         assertEquals(1, theGame.getScore());
     }
 
     @Test
     public void shouldScoreTwoWhenRolledTwice() {
-        theGame.nextGame().roll(1).roll(1);
+        theGame.nextRound().roll(1).roll(1);
 
         assertEquals(2, theGame.getScore());
     }
     @Test
     public void shouldScoreThirdWhenRolledThird(){
-        theGame.nextGame().roll(3).roll(4);
-        theGame.nextGame().roll(3);
+        theGame.nextRound().roll(3).roll(4);
+        theGame.nextRound().roll(3);
         assertEquals(10,theGame.getScore());
     }
 
     @Test
     public void shouldScoreSpareWhenRolledThird(){
-        theGame.nextGame().roll(3).roll(7);
-        theGame.nextGame().roll(3).roll(0);
+        theGame.nextRound().roll(3).roll(7);
+        theGame.nextRound().roll(3).roll(0);
         assertEquals(16,theGame.getScore());
     }
 
     @Test
     public void shouldScore25WhenRolledThirdRound(){
-        theGame.nextGame().roll(3).roll(7);
-        theGame.nextGame().roll(3).roll(0);
-        theGame.nextGame().roll(3).roll(6);
+        theGame.nextRound().roll(3).roll(7);
+        theGame.nextRound().roll(3).roll(0);
+        theGame.nextRound().roll(3).roll(6);
         assertEquals(25,theGame.getScore());
     }
 
     @Test
     public void shouldScore25WhenRolledFiveRound(){
-        theGame.nextGame().roll(3).roll(7);
-        theGame.nextGame().roll(3).roll(0);
-        theGame.nextGame().roll(3).roll(6);
-        theGame.nextGame().roll(3).roll(7);
-        theGame.nextGame().roll(3).roll(0);
+        theGame.nextRound().roll(3).roll(7);
+        theGame.nextRound().roll(3).roll(0);
+        theGame.nextRound().roll(3).roll(6);
+        theGame.nextRound().roll(3).roll(7);
+        theGame.nextRound().roll(3).roll(0);
         assertEquals(41,theGame.getScore());
     }
 
     @Test
     public void shouldScore14WhenRolledThirdRound(){
-        theGame.nextGame().roll(10).roll(1);
-        theGame.nextGame().roll(1);
+        theGame.nextRound().roll(10).roll(1);
+        theGame.nextRound().roll(1);
         assertEquals(14,theGame.getScore());
     }
-    //10 + 10 +1
-    //10 + 1 + 1
-    //+1 +1
 
     @Test
-    public void shouldScore35WhenRolledFourRound(){
-    theGame.nextGame().roll(10).roll(10);
-    theGame.nextGame().roll(1).roll(1);
-    assertEquals(35, theGame.getScore());
+    public void shouldScore35WhenRolledFourRound() {
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(1).roll(1);
+        assertEquals(35, theGame.getScore());
     }
 
+    @Test()
+    public void shouldScore300WhenAllStrike() {
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10);
+        assertEquals(300, theGame.getScore());
+    }
 
+    @Test
+    public void shouldExceptionWhenMoreThan10Pins() {
+        assertThrows(TooManyPinsException.class , () -> theGame.nextRound().roll(11));
+    }
+
+    @Test
+    public void shouldExceptionWhenLowerThan0Pins() {
+        assertThrows(LowerThanZeroPinsException.class , () -> theGame.nextRound().roll(-1));
+    }
 }
