@@ -99,4 +99,20 @@ class BowlingGameTest {
     public void shouldExceptionWhenLowerThan0Pins() {
         assertThrows(LowerThanZeroPinsException.class , () -> theGame.nextRound().roll(-1));
     }
+    @Test
+    public void shouldExceptionWhenTooManyRounds() {
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10).roll(9);
+
+
+        assertThrows(RoundsException.class , theGame.nextRound().roll(10));
+    }
 }
