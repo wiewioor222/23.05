@@ -29,4 +29,20 @@ class BowlingGameTest {
         theGame.roll(1);
         assertEquals(2, theGame.getScore());
     }
+    @Test
+    public void shouldScoreThirdWhenRolledThird(){
+        theGame.roll(3);
+        theGame.roll(4);
+        theGame.roll(3);
+        assertEquals(10,theGame.getScore());
+    }
+
+    @Test
+    public void shouldScoreSpareWhenRolledThird(){
+        theGame.roll(3);
+        theGame.roll(7);
+        theGame.roll(3);
+        assertEquals(16,theGame.getScore());
+    }
+
 }
