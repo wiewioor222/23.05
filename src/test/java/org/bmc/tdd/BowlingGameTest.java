@@ -54,10 +54,21 @@ class BowlingGameTest {
     }
 
     @Test
-    public void shouldScore30WhenRolledThirdRound(){
+    public void shouldScore14WhenRolledThirdRound(){
         theGame.nextGame().roll(10).roll(1);
         theGame.nextGame().roll(1);
         assertEquals(14,theGame.getScore());
     }
+    //10 + 10 +1
+    //10 + 1 + 1
+    //+1 +1
+
+    @Test
+    public void shouldScore35WhenRolledFourRound(){
+    theGame.nextGame().roll(10).roll(10);
+    theGame.nextGame().roll(1).roll(1);
+    assertEquals(35, theGame.getScore());
+    }
+
 
 }
