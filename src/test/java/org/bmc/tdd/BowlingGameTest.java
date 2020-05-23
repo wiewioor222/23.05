@@ -68,32 +68,34 @@ class BowlingGameTest {
 
     @Test
     public void shouldScore14WhenRolledThirdRound(){
-        theGame.nextRound().roll(10).roll(1);
-        theGame.nextRound().roll(1);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(1).roll(1);
 
         assertEquals(14,theGame.getScore());
     }
 
     @Test
     public void shouldScore35WhenRolledFourRound() {
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(1).roll(1);
+        theGame.nextRound().roll(2).roll(3);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(0).roll(0);
 
         assertEquals(35, theGame.getScore());
     }
 
     @Test()
     public void shouldScore300WhenAllStrike() {
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
         theGame.nextRound().roll(10);
 
         assertEquals(300, theGame.getScore());
@@ -111,17 +113,17 @@ class BowlingGameTest {
 
     @Test
     public void shouldThrowExceptionWhenTooManyRounds() {
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(10);
-        theGame.nextRound().roll(10).roll(9);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(10);
+        theGame.nextRound().roll(2).roll(6);
 
-//        assertThrows(TooManyRoundsException.class , () -> theGame.nextRound().roll(10));
+        assertThrows(TooManyRoundsException.class , () -> theGame.nextRound().roll(10));
     }
 }

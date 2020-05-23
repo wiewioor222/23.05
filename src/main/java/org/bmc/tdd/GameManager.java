@@ -1,9 +1,12 @@
 package org.bmc.tdd;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-class GameManager extends LinkedList<Round> {
+class GameManager extends ArrayList<Round> {
 
 	Round nextGame() {
 		return addAndReturn(new Round());
@@ -11,9 +14,9 @@ class GameManager extends LinkedList<Round> {
 
 	private Round addAndReturn(Round round) {
 
-//		if(size() == 10 && getScore() != 290){
-//			throw new TooManyRoundsException("When not all rolls is strike, available only 10 rounds");
-//		}
+		if(size() == 10 && getScore() != 270){
+			throw new TooManyRoundsException("When not all rolls is strike, available only 10 rounds");
+		}
 
 		add(round);
 		return round;
@@ -21,20 +24,20 @@ class GameManager extends LinkedList<Round> {
 
 	int getScore() {
 		int score = 0;
-		List<Roll> rolls = stream().filter(Objects::nonNull).map(Round::getRolls).flatMap(f -> Arrays.stream(f)).collect(Collectors.toList());
+		List<Roll> rolls = stream().map(Round::getRolls).filter(Objects::nonNull).flatMap(f -> f.stream()).collect(Collectors.toList());
 
-		for (int i = 0, rollIndex = 0; i < 10; i++) {
+		for (int i = 0, rollIndex = 0; i <= 10; i++) {
 			Optional<Roll> roll = rolls.size() <= rollIndex ?Optional.empty() : Optional.ofNullable(rolls.get(rollIndex));
 
 			if (isStrike(roll)) {
-				score += getValue(roll) + getRollValue(rollIndex + 1, rolls) + getRollValue(rollIndex + 2, rolls);
+				score += getValue(roll) + getRollValue(rollIndex + 1, rolls) + getRollValue(rollIndex+ 2, rolls);
 				rollIndex += 1;
 			} else if (isSpare(rollIndex, rolls)) {
 				score += 10 + getRollValue(rollIndex + 2, rolls);
 				rollIndex += 2;
 			} else {
-				score += getValue(roll);
-				rollIndex += 1;
+				score += getValue(roll) + getRollValue(rollIndex + 1, rolls);
+				rollIndex += 2;
 			}
 		}
 
