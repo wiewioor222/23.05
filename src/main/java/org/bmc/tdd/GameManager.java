@@ -10,28 +10,31 @@ class GameManager extends LinkedList<Round> {
 	}
 
 	private Round addAndReturn(Round round) {
+
+//		if(size() == 10 && getScore() != 290){
+//			throw new TooManyRoundsException("When not all rolls is strike, available only 10 rounds");
+//		}
+
 		add(round);
 		return round;
 	}
 
 	int getScore() {
-
 		int score = 0;
 		List<Roll> rolls = stream().filter(Objects::nonNull).map(Round::getRolls).flatMap(f -> Arrays.stream(f)).collect(Collectors.toList());
 
 		for (int i = 0, rollIndex = 0; i < 10; i++) {
-
 			Optional<Roll> roll = rolls.size() <= rollIndex ?Optional.empty() : Optional.ofNullable(rolls.get(rollIndex));
 
 			if (isStrike(roll)) {
 				score += getValue(roll) + getRollValue(rollIndex + 1, rolls) + getRollValue(rollIndex + 2, rolls);
 				rollIndex += 1;
 			} else if (isSpare(rollIndex, rolls)) {
-				score += 10 + getValue(roll);
+				score += 10 + getRollValue(rollIndex + 2, rolls);
 				rollIndex += 2;
 			} else {
-				score += getValue(roll) + getRollValue(rollIndex + 1, rolls);
-				rollIndex += 2;
+				score += getValue(roll);
+				rollIndex += 1;
 			}
 		}
 
